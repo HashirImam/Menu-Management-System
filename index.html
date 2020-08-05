@@ -8,17 +8,78 @@
 </head>
 <body>
     <h1>Menu Management System</h1>
-    <div class="form-container">
-        <form>
-            <input type = 'text' placeholder="Search By Name" class="input-name" required/>
-            <!-- <input type = 'price' placeholder="Search By Price" class="input-price"/> -->
-            <button class="button">Submit</button>
+    <div class="root">
+    
+    <div class="Input-Container">
+        <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="toggle2()" >Input</button>
+            <button type="button" class="toggle-btn" onclick="toggle1()">Search</button>
+        </div>
+        <form class="input" id="input">
+            <!-- <input type="text" placeholder="Serial Number" class="Serial-Number" required /> -->
+            <input type="text" placeholder="Dish name" class="Dish-Name" required />
+            <input type="text" placeholder="Description" class="Input-Description" required />
+            <input type="text" placeholder="Price" class="Input-Price" required />
+            <input type="text" placeholder="Preference" class="Input-Preference" required />
+            <button type="submit" class="Input-Submit">Submit</button>
         </form>
-        <div class="result-container">
-            <ul class="result-list"></ul>
-                                      
+    </div>
+    <div class="Search-Container">
+        
+        <div class="Search-Name" id="search-one">
+            <h3>Search By Name</h3>
+            <form class="search" >
+                
+                <input type="text" placeholder="Search by name" class="Search-By-Name" required/>
+                <button type="submit" class="Get-By-Name">Search</button>
+            </form>
+        </div>
+        
+        
+        <div class="Search-Price" id="search-two">
+            <h3>Search By Price</h3>
+            <form class="search">
+                <input type="text" placeholder="Search by price" class="Search-By-Price" required/>
+                <button type="submit" class="Get-By-Price">Search</button>
+            </form>
         </div>
     </div>
+    </div>
+    <div class="Result-Container">
+        <ul class="Result-List" id="List">
+
+        </ul>
+    </div>
+       
+    
    <script src="./app.js"></script> 
+   <script>
+         var y = document.getElementById("input")  
+         var z1 = document.getElementById("search-one")
+         var z2 = document.getElementById("search-two")
+
+         y.style.display = "block";
+         z1.style.display = "none";
+         z2.style.display = "none";
+
+       function toggle1 () {
+         var  x = document.getElementById("btn")
+           x.style.left = "110px";
+         
+           y.style.display = "none";
+        
+         z1.style.display = "block";
+         z2.style.display = "block";
+       }
+       function toggle2 () {
+         var  x = document.getElementById("btn")
+           x.style.left = "0px";
+         
+         y.style.display = "block";
+         z1.style.display = "none";
+         z2.style.display = "none";
+       }
+   </script>
 </body>
 </html>

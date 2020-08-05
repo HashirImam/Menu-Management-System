@@ -6,40 +6,60 @@ function Menu(SerialNumber, name, Description, Price, Preference) {
     this.Preference = Preference
 }
 
-const Menu1 = new Menu(1, "Burger", "extra cheese with mint flavour", 50, "veg")
-const Menu2 = new Menu(2, "Pizza", "pizza description", 70, "non veg")
-const Menu3 = new Menu(3, "Noodles", "noodles description", 40, "veg")
-const Menu4 = new Menu(4, "Mutton Kebab", "kebab description", 100, "non veg")
-const Menu5 = new Menu(5, "Mutton Qorma", "qorma description", 90, "non veg")
-const Menu6 = new Menu(6, "Mutton Biryani", "biryani description", 110, "non veg")
 
 var Menus = []
 
-Menus.push(Menu1)
-Menus.push(Menu2)
-Menus.push(Menu3)
-Menus.push(Menu4)
-Menus.push(Menu5)
-Menus.push(Menu6)
+
+const resultList = document.querySelector('.Result-List')
+const inputButton = document.querySelector('.Input-Submit')
+const getByName = document.querySelector('.Get-By-Name')
+const getByPrice = document.querySelector('.Get-By-Price')
+
+
+inputButton.addEventListener('click', storeValue)
+getByName.addEventListener('click', searchByName)
+getByPrice.addEventListener('click', searchByPrice)
 
 
 
-const inputName = document.querySelector('.input-name')
-const inputPrice = document.querySelector('.input-price')
-const button = document.querySelector('.button')
-const resultList = document.querySelector('.result-list')
+function storeValue(event) {
+    event.preventDefault();
+    SerialNumber = document.querySelector('.Serial-Number')
+    Name = document.querySelector('.Dish-Name')
+    Description = document.querySelector('.Input-Description')
+    Price = document.querySelector('.Input-Price')
+    Preference = document.querySelector('.Input-Preference')
 
-button.addEventListener('click', searchByName)
+    
+    let i = localStorage.length/5
 
+    localStorage.setItem("SerialNumber"+i, Date.now().toString + Math.floor((Math.random()*100)+1))
+    localStorage.setItem("name"+i, Name.value)
+    localStorage.setItem("Description"+i, Description.value)
+    localStorage.setItem("Price"+i, Price.value)
+    localStorage.setItem("Preference"+i, Preference.value)
+
+    let Dish = new Menu(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i))
+    Menus.push(Dish)
+    console.log(Menus)
+
+    // SerialNumber.value = ""
+    Name.value = ""
+    Description.value = ""
+    Price.value = ""
+    Preference.value = ""
+    
+}
 
 function searchByName(event) {
     event.preventDefault();
-     
-    document.getElementsByClassName("input-name").required;
-
+    const inputName = document.querySelector('.Search-By-Name') 
+    
     var key = inputName.value
 
-    if(typeof(key)==="string") {
+    var node = document.getElementById("List")
+    node.innerHTML = ""
+   
         Menus.map(menu => {
             if(menu.name.toLowerCase().includes(key.toLowerCase())){
                 const result = document.createElement("li")
@@ -47,18 +67,37 @@ function searchByName(event) {
                 resultList.appendChild(result)
             }    
         }  ) 
-    }
-
-    // if(typeof(key)==="number"){
-    //     Menus.map(menu => {
-    //         if(key >= menu.Price){
-    //             const result = document.createElement("li")
-    //             result.innerText = menu.name
-    //             resultList.appendChild(result)
-    //         }    
-    //     }  ) 
-    // }
     
    inputName.value = "" 
 }
 
+function searchByPrice(event) {
+    event.preventDefault();
+    const inputPrice = document.querySelector('.Search-By-Price')
+
+    var key = inputPrice.value
+
+    var node = document.getElementById("List")
+    node.innerHTML = ""
+
+    Menus.map(menu => {
+        if(parseInt(key)>=parseInt(menu.Price)){
+            const result = document.createElement("li")
+            result.innerText = menu.name
+            resultList.appendChild(result)
+        }    
+    }  ) 
+
+    inputPrice.value = ""
+
+}
+
+function fetch() {
+    for ( let i=0; i<localStorage.length/5; i++) {
+        let Dish = new Menu(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i))
+        Menus.push(Dish)
+        
+    }
+}
+
+window.onload = fetch
