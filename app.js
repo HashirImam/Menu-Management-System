@@ -15,6 +15,8 @@ const inputButton = document.querySelector('.Input-Submit')
 const getByName = document.querySelector('.Get-By-Name')
 const getByPrice = document.querySelector('.Get-By-Price')
 
+// console.log(Input.elements.length)
+
 
 inputButton.addEventListener('click', storeValue)
 getByName.addEventListener('click', searchByName)
@@ -24,12 +26,21 @@ getByPrice.addEventListener('click', searchByPrice)
 
 function storeValue(event) {
     event.preventDefault();
+
+    const Input = document.getElementById("input")
+
+    for(let j=0; j<Input.elements.length-1; j++) {
+        if(!validateForm(Input.elements[j].value)) {
+            return ;
+
+        }
+    }
     SerialNumber = document.querySelector('.Serial-Number')
     Name = document.querySelector('.Dish-Name')
     Description = document.querySelector('.Input-Description')
     Price = document.querySelector('.Input-Price')
     Preference = document.querySelector('.Input-Preference')
-
+    
     
     let i = localStorage.length/5
 
@@ -53,6 +64,18 @@ function storeValue(event) {
 
 function searchByName(event) {
     event.preventDefault();
+
+    const searchName = document.getElementById("search")
+
+    for(let j=0; j<searchName.elements.length-1; j++) {
+        if(!validateForm(searchName.elements[j].value)) {
+            return ;
+
+        }
+    }
+
+
+
     const inputName = document.querySelector('.Search-By-Name') 
     
     var key = inputName.value
@@ -98,6 +121,15 @@ function fetch() {
         Menus.push(Dish)
         
     }
+}
+
+function validateForm(x) {
+    if(x=="") {
+        alert("please fill all fields")
+        return false;
+    }
+    else
+    return true;
 }
 
 window.onload = fetch
