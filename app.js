@@ -1,135 +1,168 @@
-function Menu(SerialNumber, name, Description, Price, Preference) {
-    this.SerialNumber = SerialNumber,
-    this.name = name,
-    this.Description = Description,
-    this.Price = Price,
-    this.Preference = Preference
-}
 
+let Menus = []
 
-var Menus = []
+class Dish {
 
+    constructor() {
 
-const resultList = document.querySelector('.Result-List')
-const inputButton = document.querySelector('.Input-Submit')
-const getByName = document.querySelector('.Get-By-Name')
-const getByPrice = document.querySelector('.Get-By-Price')
+        this.SerialNumber = "";
+        this.name = "";
+        this.Description = "" ;
+        this.Price = "";
+        this.Preference = "" ;
 
-// console.log(Input.elements.length)
-
-
-inputButton.addEventListener('click', storeValue)
-getByName.addEventListener('click', searchByName)
-getByPrice.addEventListener('click', searchByPrice)
-
-
-
-function storeValue(event) {
-    event.preventDefault();
-
-    const Input = document.getElementById("input")
-
-    for(let j=0; j<Input.elements.length-1; j++) {
-        if(!validateForm(Input.elements[j].value)) {
-            return ;
-
-        }
-    }
-    SerialNumber = document.querySelector('.Serial-Number')
-    Name = document.querySelector('.Dish-Name')
-    Description = document.querySelector('.Input-Description')
-    Price = document.querySelector('.Input-Price')
-    Preference = document.querySelector('.Input-Preference')
-    
-    
-    let i = localStorage.length/5
-
-    localStorage.setItem("SerialNumber"+i, Date.now().toString + Math.floor((Math.random()*100)+1))
-    localStorage.setItem("name"+i, Name.value)
-    localStorage.setItem("Description"+i, Description.value)
-    localStorage.setItem("Price"+i, Price.value)
-    localStorage.setItem("Preference"+i, Preference.value)
-
-    let Dish = new Menu(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i))
-    Menus.push(Dish)
-    console.log(Menus)
-
-    // SerialNumber.value = ""
-    Name.value = ""
-    Description.value = ""
-    Price.value = ""
-    Preference.value = ""
-    
-}
-
-function searchByName(event) {
-    event.preventDefault();
-
-    const searchName = document.getElementById("search")
-
-    for(let j=0; j<searchName.elements.length-1; j++) {
-        if(!validateForm(searchName.elements[j].value)) {
-            return ;
-
-        }
     }
 
+    setDishValue(SerialNumber, name, Description, Price, Preference) {
 
+        this.SerialNumber = SerialNumber,
+        this.name = name,
+        this.Description = Description,
+        this.Price = Price,
+        this.Preference = Preference
 
-    const inputName = document.querySelector('.Search-By-Name') 
-    
-    var key = inputName.value
-
-    var node = document.getElementById("List")
-    node.innerHTML = ""
-   
-        Menus.map(menu => {
-            if(menu.name.toLowerCase().includes(key.toLowerCase())){
-                const result = document.createElement("li")
-                result.innerText = menu.name
-                resultList.appendChild(result)
-            }    
-        }  ) 
-    
-   inputName.value = "" 
-}
-
-function searchByPrice(event) {
-    event.preventDefault();
-    const inputPrice = document.querySelector('.Search-By-Price')
-
-    var key = inputPrice.value
-
-    var node = document.getElementById("List")
-    node.innerHTML = ""
-
-    Menus.map(menu => {
-        if(parseInt(key)>=parseInt(menu.Price)){
-            const result = document.createElement("li")
-            result.innerText = menu.name
-            resultList.appendChild(result)
-        }    
-    }  ) 
-
-    inputPrice.value = ""
+    }
 
 }
 
-function fetch() {
-    for ( let i=0; i<localStorage.length/5; i++) {
-        let Dish = new Menu(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i))
-        Menus.push(Dish)
+class Cart {
+    constructor(viewObj) {
+        this.viewObj = viewObj;
+    }
+
+    
+
+    fetchDishByName = () => {
         
+        var objectDataArr = [];
+
+        for(let i=0; i<Menus.length; i++) {
+            if(Menus[i].name.toLowerCase().includes(this.viewObj.searchByName.value.toLowerCase()))
+
+            objectDataArr.push(Menus[i]);
+            
+        }
+        return objectDataArr
+
+    }
+
+    fetchDishByPrice = () => {
+        var objectDataArr = [];
+
+        for(let i=0; i<Menus.length; i++) {
+            if(parseInt(Menus[i].Price) <= parseInt (this.viewObj.searchByPrice.value))
+            objectDataArr.push(Menus[i])
+        }
+        return objectDataArr;
+    }
+
+    storeDish = () => {
+        let i = Math.floor(localStorage.length/5) ;
+
+        localStorage.setItem("SerialNumber"+i, Date.now().toString + Math.floor((Math.random()*100)+1))
+        localStorage.setItem("name"+i, this.viewObj.dishName.value)
+        localStorage.setItem("Description"+i, this.viewObj.dishDescription.value)
+        localStorage.setItem("Price"+i, this.viewObj.dishPrice.value)
+        localStorage.setItem("Preference"+i, this.viewObj.dishPreference.value)
     }
 }
 
-function validateForm(x) {
-    if(x=="") {
-        alert("please fill all fields")
+class view {
+    constructor() {
+        this.dishName = document.querySelector('.Dish-Name')
+        this.dishDescription = document.querySelector('.Input-Description')
+        this.dishPrice = document.querySelector('.Input-Price')
+        this.dishPreference = document.querySelector('.Input-Preference')
+
+        this.submitButton = document.querySelector('.Input-Submit')
+
+        this.searchByName = document.querySelector('.Search-By-Name')
+        this.searchNameButton = document.querySelector('.Get-By-Name')
+
+        this.searchByPrice = document.querySelector('.Search-By-Price')
+        this.searchPriceButton = document.querySelector('.Get-By-Price')
+
+        this.form = document.getElementById("input")
+        this.form1 = document.getElementById("search-one-form")
+        this.form2 = document.getElementById("search-two-form")
+
+
+    }
+
+    displayData(objectDataArr) {
+        var node = document.getElementById("List")
+        node.innerHTML = ""
+
+
+        if(objectDataArr.length === 0) {
+            const h2 = document.createElement("h2")
+            h2.innerText = "NO DATA FOUND"
+            node.appendChild(h2);
+        }
+
+        else{
+            for(let i=0; i<objectDataArr.length; i++) {
+                const result = document.createElement("li")
+                result.innerText = objectDataArr[i].name
+                node.appendChild(result)
+            }
+        }
+
+}
+
+validFormCheck(x) {
+    if (x == ""){
+        alert("all fields must be filled out");
         return false;
     }
-    else
+    else 
     return true;
 }
 
-window.onload = fetch
+validateForm(form) {
+    for( let j=0; j<form.elements.length - 1 ; j++){
+        if(!this.validFormCheck(form.elements[j].value)){
+            return false
+        }
+    }
+    return true;
+}
+
+
+}
+
+let viewObj = new view()
+let Dobj = new Cart(viewObj)
+
+viewObj.submitButton.addEventListener('click', () => {
+    if(viewObj.validateForm(viewObj.form)) {
+        Dobj.storeDish();
+        location.reload();
+    }
+})
+
+viewObj.searchNameButton.addEventListener('click', () => {
+    if(viewObj.validateForm(viewObj.form1)) {
+        viewObj.displayData(Dobj.fetchDishByName());
+        
+    }
+})
+
+viewObj.searchPriceButton.addEventListener('click', () => {
+    if(viewObj.validateForm(viewObj.form2)) {
+        viewObj.displayData(Dobj.fetchDishByPrice());
+        
+    }
+})
+
+function fetch() {
+    for ( let i=0; i<localStorage.length/5; i++) {
+        let Menu = new Dish();
+        Menu.setDishValue(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i));
+        Menus.push(Menu);
+        
+    }
+    console.log(Menus)
+}
+
+window.onload = fetch;

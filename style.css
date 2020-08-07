@@ -1,32 +1,4 @@
-/* .root {
-    display: flex;
-    justify-content: center;
-    gap: 10vh;
-}
 
-h1 {
-    text-align: center;
-}
-
-.input {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1vh
-}
-
-.Search-Container {
-    display: flex;
-    flex-direction: column;
-    border: solid;
-    margin-top: 0;
-}
-
-.Input-Container {
-    border: solid;
-    min-height: 500px;
-    padding: 10px;
-} */
 
 *{
     margin: 0;

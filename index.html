@@ -17,7 +17,6 @@
             <button type="button" class="toggle-btn" onclick="toggle1()">Search</button>
         </div>
         <form class="input" id="input">
-            <!-- <input type="text" placeholder="Serial Number" class="Serial-Number" required /> -->
             <input type="text" placeholder="Dish name" class="Dish-Name" required />
             <input type="text" placeholder="Description" class="Input-Description" required />
             <input type="text" placeholder="Price" class="Input-Price" required />
@@ -29,7 +28,7 @@
         
         <div class="Search-Name" id="search-one">
             <h3>Search By Name</h3>
-            <form class="search" id="search">
+            <form class="search" id="search-one-form" onsubmit="return false">
                 
                 <input type="text" placeholder="Search by name" class="Search-By-Name" required/>
                 <button type="submit" class="Get-By-Name">Search</button>
@@ -39,7 +38,7 @@
         
         <div class="Search-Price" id="search-two">
             <h3>Search By Price</h3>
-            <form class="search">
+            <form class="search" id="search-two-form" onsubmit="return false">
                 <input type="text" placeholder="Search by price" class="Search-By-Price" required/>
                 <button type="submit" class="Get-By-Price">Search</button>
             </form>
