@@ -1,5 +1,5 @@
 
-let Menus = []
+
 
 class Dish {
 
@@ -28,6 +28,7 @@ class Dish {
 class Cart {
     constructor(viewObj) {
         this.viewObj = viewObj;
+        this.Menus = [] ;
     }
 
     
@@ -36,10 +37,10 @@ class Cart {
         
         var objectDataArr = [];
 
-        for(let i=0; i<Menus.length; i++) {
-            if(Menus[i].name.toLowerCase().includes(this.viewObj.searchByName.value.toLowerCase()))
+        for(let i=0; i<this.Menus.length; i++) {
+            if(this.Menus[i].name.toLowerCase().includes(this.viewObj.searchByName.value.toLowerCase()))
 
-            objectDataArr.push(Menus[i]);
+            objectDataArr.push(this.Menus[i]);
             
         }
         return objectDataArr
@@ -49,21 +50,32 @@ class Cart {
     fetchDishByPrice = () => {
         var objectDataArr = [];
 
-        for(let i=0; i<Menus.length; i++) {
-            if(parseInt(Menus[i].Price) <= parseInt (this.viewObj.searchByPrice.value))
-            objectDataArr.push(Menus[i])
+        for(let i=0; i<this.Menus.length; i++) {
+            if(parseInt(this.Menus[i].Price) <= parseInt (this.viewObj.searchByPrice.value))
+            objectDataArr.push(this.Menus[i])
         }
         return objectDataArr;
     }
 
     storeDish = () => {
-        let i = Math.floor(localStorage.length/5) ;
+        let i = Math.floor(localStorage.length) ;
 
-        localStorage.setItem("SerialNumber"+i, Date.now().toString + Math.floor((Math.random()*100)+1))
-        localStorage.setItem("name"+i, this.viewObj.dishName.value)
-        localStorage.setItem("Description"+i, this.viewObj.dishDescription.value)
-        localStorage.setItem("Price"+i, this.viewObj.dishPrice.value)
-        localStorage.setItem("Preference"+i, this.viewObj.dishPreference.value)
+        let menu = new Dish() ;
+        menu.setDishValue(Date.now().toString + Math.floor((Math.random()*100)+1),
+                          this.viewObj.dishName.value,
+                          this.viewObj.dishDescription.value,
+                          this.viewObj.dishPrice.value,
+                          this.viewObj.dishPreference.value);
+        
+        localStorage.setItem("OBJ"+i,JSON.stringify(menu));
+    }
+    fetch = () => {
+        for ( let i=0; i<localStorage.length; i++) {
+            let menu = JSON.parse(localStorage.getItem("OBJ"+i)); 
+            this.Menus.push(menu);
+            
+        }
+        console.log(this.Menus)
     }
 }
 
@@ -155,14 +167,8 @@ viewObj.searchPriceButton.addEventListener('click', () => {
     }
 })
 
-function fetch() {
-    for ( let i=0; i<localStorage.length/5; i++) {
-        let Menu = new Dish();
-        Menu.setDishValue(localStorage.getItem("SerialNumber"+i), localStorage.getItem("name"+i), localStorage.getItem("Description"+i), localStorage.getItem("Price"+i), localStorage.getItem("Preference"+i));
-        Menus.push(Menu);
-        
-    }
-    console.log(Menus)
-}
 
-window.onload = fetch;
+
+window.onload = () => {
+    Dobj.fetch();
+}
