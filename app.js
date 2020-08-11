@@ -1,6 +1,5 @@
 
 
-
 class Dish {
 
     constructor() {
@@ -26,19 +25,17 @@ class Dish {
 }
 
 class Cart {
-    constructor(viewObj) {
-        this.viewObj = viewObj;
+    constructor() {
         this.Menus = [] ;
     }
 
-    
 
-    fetchDishByName = () => {
+    fetchDishByName = (obj) => {
         
         var objectDataArr = [];
 
         for(let i=0; i<this.Menus.length; i++) {
-            if(this.Menus[i].name.toLowerCase().includes(this.viewObj.searchByName.value.toLowerCase()))
+            if(this.Menus[i].name.toLowerCase().includes(obj.searchByName.value.toLowerCase()))
 
             objectDataArr.push(this.Menus[i]);
             
@@ -47,27 +44,26 @@ class Cart {
 
     }
 
-    fetchDishByPrice = () => {
+    fetchDishByPrice = (obj) => {
         var objectDataArr = [];
 
         for(let i=0; i<this.Menus.length; i++) {
-            if(parseInt(this.Menus[i].Price) <= parseInt (this.viewObj.searchByPrice.value))
+            if(parseInt(this.Menus[i].Price) <= parseInt (obj.searchByPrice.value))
             objectDataArr.push(this.Menus[i])
         }
         return objectDataArr;
     }
 
-    storeDish = () => {
+    storeDish = (obj,viewObj) => {
         let i = Math.floor(localStorage.length) ;
 
-        let menu = new Dish() ;
-        menu.setDishValue(Date.now().toString + Math.floor((Math.random()*100)+1),
-                          this.viewObj.dishName.value,
-                          this.viewObj.dishDescription.value,
-                          this.viewObj.dishPrice.value,
-                          this.viewObj.dishPreference.value);
+        obj.setDishValue(Date.now().toString + Math.floor((Math.random()*100)+1),
+                          viewObj.dishName.value,
+                          viewObj.dishDescription.value,
+                          viewObj.dishPrice.value,
+                          viewObj.dishPreference.value);
         
-        localStorage.setItem("OBJ"+i,JSON.stringify(menu));
+        localStorage.setItem("OBJ"+i,JSON.stringify(obj));
     }
     fetch = () => {
         for ( let i=0; i<localStorage.length; i++) {
@@ -80,7 +76,10 @@ class Cart {
 }
 
 class view {
-    constructor() {
+    constructor(Dobj) {
+
+        this.Dobj = Dobj;
+
         this.dishName = document.querySelector('.Dish-Name')
         this.dishDescription = document.querySelector('.Input-Description')
         this.dishPrice = document.querySelector('.Input-Price')
@@ -140,32 +139,41 @@ validateForm(form) {
     return true;
 }
 
+store = (addObj) => {
+    if(this.validateForm(this.form)){
+        this.Dobj.storeDish(addObj,this);
+        location.reload();
+    }
+}
+searchName = () => {
+    if(this.validateForm(this.form1)){
+        this.displayData(this.Dobj.fetchDishByName(this))
+    }
+
+}
+searchPrice = () => {
+    if(this.validateForm(this.form2)){
+        this.displayData(this.Dobj.fetchDishByPrice(this))
+    }
 
 }
 
-let viewObj = new view()
-let Dobj = new Cart(viewObj)
+
+}
+
+let Dobj = new Cart();
+let viewObj = new view(Dobj);
 
 viewObj.submitButton.addEventListener('click', () => {
-    if(viewObj.validateForm(viewObj.form)) {
-        Dobj.storeDish();
-        location.reload();
+    let addObj = new Dish ();
+    viewObj.store(addObj)
     }
-})
+)
 
-viewObj.searchNameButton.addEventListener('click', () => {
-    if(viewObj.validateForm(viewObj.form1)) {
-        viewObj.displayData(Dobj.fetchDishByName());
-        
-    }
-})
+viewObj.searchNameButton.addEventListener('click', viewObj.searchName)
+   
 
-viewObj.searchPriceButton.addEventListener('click', () => {
-    if(viewObj.validateForm(viewObj.form2)) {
-        viewObj.displayData(Dobj.fetchDishByPrice());
-        
-    }
-})
+viewObj.searchPriceButton.addEventListener('click', viewObj.searchPrice)
 
 
 
